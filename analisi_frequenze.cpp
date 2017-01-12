@@ -15,10 +15,9 @@ int main() {
     string pathname;
 
     cout << "Insert the full pathname of the file: " << endl;
-    cin >> pathname;
+    getline(cin, pathname);
     file.open(pathname);
     if(file.is_open()) {
-
     } else {
         cout << "error" << endl;
     }
