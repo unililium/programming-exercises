@@ -1,12 +1,13 @@
-#include <iostream>
 #include <fstream>
+#include <iostream>
 #include <string>
 using namespace std;
 
 class Symbol {
     char car;
     int q;
-public:
+
+   public:
     Symbol(char car, int q) : car(car), q(q) {}
 };
 
