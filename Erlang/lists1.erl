@@ -1,5 +1,8 @@
 -module(lists1).
--export([min/1]).
+-export([myLast/1, min/1]).
+
+myLast([X]) -> X;
+myLast([_|T]) -> myLast(T).
 
 min([H|T]) ->
     min(H, T).
