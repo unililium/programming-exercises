@@ -1,5 +1,5 @@
 -module(lists1).
--export([myLast/1, myButLast/1, elementAt/2, myLength/1, min/1]).
+-export([myLast/1, myButLast/1, elementAt/2, myLength/1, myReverse/1, min/1]).
 
 % myLast([1,2,3]).
 % 3
@@ -22,6 +22,11 @@ elementAt(N, [_|T]) -> elementAt(N - 1, T).
 % 3
 myLength([]) -> 0;
 myLength([_|T]) -> 1 + myLength(T).
+
+% myReverse([1,2,3]).
+% [3,2,1]
+myReverse([X]) -> [X];
+myReverse([H|T]) -> myReverse(T) ++ [H]. 
 
 % min([1,2,3])
 % 1
