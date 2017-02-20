@@ -1,13 +1,25 @@
 -module(lists1).
--export([myLast/1, myButLast/1, min/1]).
+-export([myLast/1, myButLast/1, elementAt/2, min/1]).
 
+% myLast([1,2,3]).
+% 3
 myLast([X]) -> X;
 myLast([_|T]) -> myLast(T).
 
-myButLast([_]) -> false;
+% myButLast([1,2,3]).
+% 2
+myButLast([_]) -> nil;
 myButLast([X,_]) -> X;
-myButLast([H|T]) -> myButLast(T).
+myButLast([_|T]) -> myButLast(T).
 
+% elementAt(3, [3,2,1,0]).
+% 1
+elementAt(_, []) -> nil;
+elementAt(N, [H|_]) when N == 1 -> H;
+elementAt(N, [_|T]) -> elementAt(N - 1, T).
+
+% min([1,2,3])
+% 1
 min([H|T]) ->
     min(H, T).
 min(M, []) ->
