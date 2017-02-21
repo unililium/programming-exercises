@@ -1,5 +1,5 @@
 -module(lists1).
--export([myLast/1, myButLast/1, elementAt/2, myLength/1, myReverse/1, isPalindrome/1, min/1]).
+-export([myLast/1, myButLast/1, elementAt/2, myLength/1, myReverse/1, isPalindrome/1, flatten/1, myMin/1]).
 
 % myLast([1,2,3]).
 % 3
@@ -34,11 +34,17 @@ isPalindrome(X) -> X == myReverse(X).
 
 % min([1,2,3])
 % 1
-min([H|T]) ->
-    min(H, T).
-min(M, []) ->
+myMin([H|T]) ->
+    myMin(H, T).
+myMin(M, []) ->
     M;
-min(M, [H|T]) when M < H ->
-    min(M, T);
-min(_M, [H|T]) ->
-    min(H, T).
+myMin(M, [H|T]) when M < H ->
+    myMin(M, T);
+myMin(_M, [H|T]) ->
+    myMin(H, T).
+
+% flatten([1,[2,3],4,[5,[6,7,[8]]],9]).
+% [1,2,3,4,5,6,7,8,9]
+flatten([H|T]) -> flatten(H) ++ flatten(T);
+flatten([]) -> [];
+flatten(X) -> [X].
