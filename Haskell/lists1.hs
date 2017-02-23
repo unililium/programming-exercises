@@ -11,3 +11,18 @@ insertAt y xs n = take (n-1) xs ++ [y] ++ drop (n-1) xs
 
 isPalindrome :: (Eq a) => [a] -> Bool
 isPalindrome xs = xs == reverse xs
+
+myReverse :: [a] -> [a]
+myReverse [] = []
+myReverse (x:xs) = myReverse xs ++ [x]
+
+myLength :: [a] -> Int
+myLength = foldl (\n _ -> n + 1) 0
+
+myMin :: [Int] -> Int
+myMin (x:xs) = myMin' x xs
+myMin' :: Int -> [Int] -> Int
+myMin' m [] = m
+myMin' m (x:xs)
+    | m < x = myMin' m xs
+    | otherwise = myMin' x xs

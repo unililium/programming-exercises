@@ -1,0 +1,7 @@
+<!ELEMENT restaurants (restaurant+)>
+<!ELEMENT restaurant (name, dish+)>
+<!ELEMENT dish (name, ingredient+, price)>
+<!ELEMENT ingredient (name, weight)>
+<!ELEMENT name (#PCDATA)>
+<!ELEMENT weight (#PCDATA)>
+<!ELEMENT price (#PCDATA)>
