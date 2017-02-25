@@ -1,0 +1,6 @@
+#lang racket
+
+(define (my-last l) (
+  (cond (null? (cdr l)) (car l))
+  (my-last (cdr l))
+))
