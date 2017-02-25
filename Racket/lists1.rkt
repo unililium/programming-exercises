@@ -18,3 +18,10 @@
       (if (= n 1)
           (car l)
           (element-at (cdr l) (- n 1)))))
+
+(define (my-length l)
+  (define (myl ll n)
+    (if (null? (cdr ll))
+        n
+        (myl (cdr ll) (+ n 1))))
+  (myl l 1))
