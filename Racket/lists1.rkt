@@ -25,3 +25,8 @@
         n
         (myl (cdr ll) (+ n 1))))
   (myl l 1))
+
+(define (palindrome? l)
+  (if (equal? l (reverse l))
+    #t
+    #f))
