@@ -1,11 +1,11 @@
 #include <iostream>
 #include <vector>
 
+#define SIZE 5
+
 using namespace std;
 
-void insert_sort(int* a) {
-    int alength = 5;
-
+void insert_sort(int* a, int alength) {
     for (int i = 1; i <= alength; i++) {
         int key = a[i];
         int j = i - 1;
@@ -18,8 +18,7 @@ void insert_sort(int* a) {
     }
 }
 
-void print_array(int* a) {
-    int alength = 5;
+void print_array(int* a, int alength) {
     cout << "{ ";
     for (int i = 0; i < alength; i++) {
         cout << a[i] << " ";
@@ -28,8 +27,8 @@ void print_array(int* a) {
 }
 
 int main() {
-    int a[5] = {2, 6, 1, 23, -6};
-    print_array(a);
-    insert_sort(a);
-    print_array(a);
+    int a[SIZE] = {2, 6, 1, 23, -6};
+    print_array(a, SIZE);
+    insert_sort(a, SIZE);
+    print_array(a, SIZE);
 }
