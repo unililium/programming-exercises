@@ -3,14 +3,14 @@
 
 using namespace std;
 
-void insert_sort(vector<int> a) {
-    int alength = a.size();
+void insert_sort(int* a) {
+    int alength = 5;
 
     for (int i = 1; i <= alength; i++) {
         int key = a[i];
         int j = i - 1;
 
-        while (j > 0 && a[j] > key) {
+        while (j >= 0 && a[j] > key) {
             a[j + 1] = a[j];
             j = j - 1;
         }
@@ -18,8 +18,8 @@ void insert_sort(vector<int> a) {
     }
 }
 
-void print_array(vector<int> a) {
-    int alength = a.size();
+void print_array(int* a) {
+    int alength = 5;
     cout << "{ ";
     for (int i = 0; i < alength; i++) {
         cout << a[i] << " ";
@@ -28,7 +28,7 @@ void print_array(vector<int> a) {
 }
 
 int main() {
-    vector<int> a = {2, 6, 1, 23, -6};
+    int a[5] = {2, 6, 1, 23, -6};
     print_array(a);
     insert_sort(a);
     print_array(a);
