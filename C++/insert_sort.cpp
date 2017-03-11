@@ -1,9 +1,10 @@
 #include <iostream>
+#include <vector>
 
 using namespace std;
 
-void insert_sort(int* a) {
-    int alength = sizeof(a) / sizeof(*a);
+void insert_sort(vector<int> a) {
+    int alength = a.size();
 
     for (int i = 1; i <= alength; i++) {
         int key = a[i];
@@ -17,16 +18,17 @@ void insert_sort(int* a) {
     }
 }
 
-void print_array(int* a) {
-    int alength = sizeof(a)/sizeof(*a);
+void print_array(vector<int> a) {
+    int alength = a.size();
+    cout << "{ ";
     for (int i = 0; i < alength; i++) {
-        cout << a[i];
+        cout << a[i] << " ";
     }
-    cout << endl;
+    cout << "}" << endl;
 }
 
 int main() {
-    int a[5] = {2, 6, 1, 23, -6};
+    vector<int> a = {2, 6, 1, 23, -6};
     print_array(a);
     insert_sort(a);
     print_array(a);
