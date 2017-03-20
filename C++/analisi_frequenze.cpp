@@ -1,6 +1,7 @@
 #include <fstream>
 #include <iostream>
 #include <string>
+
 using namespace std;
 
 class Symbol {
@@ -18,7 +19,7 @@ int main() {
     cout << "Insert the full pathname of the file: " << endl;
     getline(cin, pathname);
     file.open(pathname);
-    if(file.is_open()) {
+    if (file.is_open()) {
     } else {
         cout << "error" << endl;
     }
