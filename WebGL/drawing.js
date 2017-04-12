@@ -13,4 +13,22 @@ function main() {
    }
     context.strokeStyle = "#e43298";
     context.stroke();
+
+    context.beginPath();
+
+    // Draw a circle
+    var segments = 64;
+    var radius = 100;
+    var cx = 400;
+    var cy = 300;
+    context.moveTo(cx + radius, cy);
+
+    for(var i = 0; i <= segments; i++) {
+        var alpha = (i / segments) * 2 * Math.PI;
+        context.lineTo(cx + radius * Math.cos(alpha),
+                       cy + radius * Math.sin(alpha));
+    }
+    context.lineWidth = 1;
+    context.strokeStyle = "#000";
+    context.stroke();
 }
