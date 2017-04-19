@@ -1,0 +1,80 @@
+23 ssa "unused VAR_DECLs removed" "printf" 1
+23 ssa "unused VAR_DECLs removed" "atoi" 1
+23 ssa "unused VAR_DECLs removed" "check_points" 2
+23 ssa "unused VAR_DECLs removed" "main._omp_fn.0" 8
+23 ssa "unused VAR_DECLs removed" "main" 15
+35 ccp "Copies propagated" "check_points" 1
+35 ccp "Constants propagated" "check_points" 2
+35 ccp "Statements deleted" "check_points" 4
+39 fre "SCC iterations == 3" "check_points" 3
+50 release_ssa "unused VAR_DECLs removed" "check_points" 1
+50 release_ssa "SSA names released" "check_points" 6
+50 release_ssa "SSA name holes removed" "check_points" 6
+32 einline "unused VAR_DECLs removed" "main._omp_fn.0" 1
+35 ccp "Copies propagated" "main._omp_fn.0" 4
+35 ccp "Constants propagated" "main._omp_fn.0" 6
+35 ccp "Statements deleted" "main._omp_fn.0" 6
+39 fre "SCC iterations == 2" "main._omp_fn.0" 5
+39 fre "SCC iterations == 3" "main._omp_fn.0" 3
+42 cddce "PHI nodes deleted" "main._omp_fn.0" 1
+50 release_ssa "SSA names released" "main._omp_fn.0" 4
+50 release_ssa "SSA name holes removed" "main._omp_fn.0" 4
+35 ccp "Copies propagated" "main" 2
+35 ccp "Statements folded" "main" 1
+35 ccp "Constants propagated" "main" 2
+35 ccp "Statements deleted" "main" 14
+39 fre "SCC iterations == 2" "main" 1
+42 cddce "Statements deleted" "main" 1
+50 release_ssa "unused VAR_DECLs removed" "main" 7
+50 release_ssa "SSA names released" "main" 27
+50 release_ssa "SSA name holes removed" "main" 27
+91 ccp "Copies propagated" "main._omp_fn.0" 2
+91 ccp "Constants propagated" "main._omp_fn.0" 1
+91 ccp "Statements deleted" "main._omp_fn.0" 4
+99 fre "SCC iterations == 2" "main._omp_fn.0" 8
+99 fre "SCC iterations == 3" "main._omp_fn.0" 5
+99 fre "Eliminated" "main._omp_fn.0" 2
+101 vrp "Constants propagated" "main._omp_fn.0" 1
+101 vrp "Number of ASSERT_EXPR expressions inserted" "main._omp_fn.0" 12
+103 dce "PHI nodes deleted" "main._omp_fn.0" 2
+107 copyprop "Copies propagated" "main._omp_fn.0" 2
+107 copyprop "Statements deleted" "main._omp_fn.0" 2
+128 pre "compute_antic iterations == 3" "main._omp_fn.0" 1
+128 pre "Insertions" "main._omp_fn.0" 3
+128 pre "compute_partial_antic iterations == 2" "main._omp_fn.0" 1
+128 pre "SCC iterations == 2" "main._omp_fn.0" 5
+128 pre "SCC iterations == 3" "main._omp_fn.0" 5
+128 pre "insert iterations == 2" "main._omp_fn.0" 1
+128 pre "Eliminated" "main._omp_fn.0" 2
+129 sink "Sunk statements" "main._omp_fn.0" 1
+137 copyprop "Constants propagated" "main._omp_fn.0" 2
+137 copyprop "Statements deleted" "main._omp_fn.0" 2
+138 dce "PHI nodes deleted" "main._omp_fn.0" 1
+173 vrp "Number of ASSERT_EXPR expressions inserted" "main._omp_fn.0" 11
+175 cddce "PHI nodes deleted" "main._omp_fn.0" 1
+248 combine "two-insn combine" "main._omp_fn.0" 4
+263 gcse2 "moves inserted" "main._omp_fn.0" 1
+263 gcse2 "insns deleted" "main._omp_fn.0" 1
+263 gcse2 "copies inserted" "main._omp_fn.0" 2
+79 inline "unused VAR_DECLs removed" "check_points" 2
+99 fre "SCC iterations == 3" "check_points" 3
+101 vrp "Number of ASSERT_EXPR expressions inserted" "check_points" 1
+107 copyprop "Copies propagated" "check_points" 1
+107 copyprop "Statements deleted" "check_points" 1
+128 pre "compute_antic iterations == 2" "check_points" 1
+128 pre "Insertions" "check_points" 1
+128 pre "compute_partial_antic iterations == 2" "check_points" 1
+128 pre "SCC iterations == 2" "check_points" 2
+128 pre "SCC iterations == 3" "check_points" 3
+128 pre "insert iterations == 2" "check_points" 1
+173 vrp "Number of ASSERT_EXPR expressions inserted" "check_points" 2
+175 cddce "PHI nodes deleted" "check_points" 1
+216 optimized "unused VAR_DECLs removed" "check_points" 1
+99 fre "SCC iterations == 2" "main" 1
+101 vrp "Number of ASSERT_EXPR expressions inserted" "main" 1
+128 pre "compute_antic iterations == 2" "main" 1
+128 pre "compute_partial_antic iterations == 2" "main" 1
+128 pre "SCC iterations == 2" "main" 1
+128 pre "insert iterations == 1" "main" 1
+173 vrp "Number of ASSERT_EXPR expressions inserted" "main" 1
+248 combine "two-insn combine" "main" 1

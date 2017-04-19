@@ -1,0 +1,326 @@
+
+;; Function check_points (check_points, funcdef_no=28, decl_uid=3015, cgraph_uid=28, symbol_order=28)
+
+check_points (unsigned int index, unsigned int num_points_per_thread)
+{
+  double y;
+  double x;
+  unsigned int local_count;
+  unsigned int i;
+  unsigned int seed;
+  unsigned int D.3045;
+  double D.3042;
+  double D.3041;
+  double D.3040;
+  double D.3039;
+  int D.3038;
+  double D.3037;
+  int D.3036;
+
+  <bb 2>:
+  seed = index;
+  local_count = 0;
+  i = 0;
+  goto <bb 6>;
+
+  <bb 3>:
+  D.3036 = rand_r (&seed);
+  D.3037 = (double) D.3036;
+  x = D.3037 / 2.147483647e+9;
+  D.3038 = rand_r (&seed);
+  D.3039 = (double) D.3038;
+  y = D.3039 / 2.147483647e+9;
+  printf ("Thread %d - Point %f %f\n", index, x, y);
+  D.3040 = x * x;
+  D.3041 = y * y;
+  D.3042 = D.3040 + D.3041;
+  if (D.3042 <= 1.0e+0)
+    goto <bb 4>;
+  else
+    goto <bb 5>;
+
+  <bb 4>:
+  local_count = local_count + 1;
+
+  <bb 5>:
+  i = i + 1;
+
+  <bb 6>:
+  if (i < num_points_per_thread)
+    goto <bb 3>;
+  else
+    goto <bb 7>;
+
+  <bb 7>:
+  D.3045 = local_count;
+  seed = {CLOBBER};
+  return D.3045;
+
+}
+
+
+
+;; Function printf (<unset-asm-name>, funcdef_no=11, decl_uid=760, cgraph_uid=11, symbol_order=11)
+
+__attribute__((__artificial__, __gnu_inline__, __always_inline__))
+printf (const char * restrict __fmt)
+{
+  int D.3048;
+
+  <bb 2>:
+  D.3048 = __printf_chk (1, __fmt, __builtin_va_arg_pack ());
+  return D.3048;
+
+}
+
+
+
+;; Function main (main, funcdef_no=29, decl_uid=3027, cgraph_uid=29, symbol_order=29)
+
+
+OMP region tree
+
+bb 4: gimple_omp_parallel
+    bb 11: gimple_omp_atomic_load
+    bb 12: GIMPLE_OMP_RETURN
+    bb 5: gimple_omp_for
+    bb 9: GIMPLE_OMP_CONTINUE
+    bb 10: GIMPLE_OMP_RETURN
+bb 13: GIMPLE_OMP_RETURN
+
+Added new low gimple function main._omp_fn.0 to callgraph
+Introduced new external node (__atomic_fetch_add_4/33).
+Introduced new external node (__builtin_omp_get_num_threads/34).
+Introduced new external node (__builtin_omp_get_thread_num/35).
+
+;; Function main._omp_fn.0 (main._omp_fn.0, funcdef_no=30, decl_uid=3074, cgraph_uid=32, symbol_order=32)
+
+main._omp_fn.0 (struct .omp_data_s.3 & restrict .omp_data_i)
+{
+  unsigned int D.3120;
+  unsigned int num_points_per_thread;
+  unsigned int iftmp.2;
+  unsigned int D.3117;
+  unsigned int D.3116;
+  unsigned int index;
+  unsigned int D.3114;
+  unsigned int D.3113;
+  unsigned int D.3112;
+  unsigned int tt.7;
+  unsigned int q.6;
+  unsigned int D.3109;
+  int D.3108;
+  unsigned int D.3107;
+  int D.3106;
+  unsigned int * D.3105;
+  unsigned int num_threads.4;
+  unsigned int num_points;
+  unsigned int num_threads;
+  unsigned int inside_points;
+
+  <bb 20>:
+
+  <bb 5>:
+  inside_points = 0;
+  num_threads = .omp_data_i->num_threads;
+  num_points = .omp_data_i->num_points;
+  num_threads.4 = num_threads;
+  if (0 < num_threads.4)
+    goto <bb 17>;
+  else
+    goto <bb 10>;
+
+  <bb 10>:
+
+  <bb 11>:
+  D.3105 = &.omp_data_i->inside_points;
+  __atomic_fetch_add_4 (D.3105, inside_points, 0);
+
+  <bb 12>:
+
+  <bb 13>:
+  return;
+
+  <bb 17>:
+  D.3106 = __builtin_omp_get_num_threads ();
+  D.3107 = (unsigned int) D.3106;
+  D.3108 = __builtin_omp_get_thread_num ();
+  D.3109 = (unsigned int) D.3108;
+  q.6 = num_threads.4 / D.3107;
+  tt.7 = num_threads.4 % D.3107;
+  if (D.3109 < tt.7)
+    goto <bb 18>;
+  else
+    goto <bb 19>;
+
+  <bb 19>:
+  D.3112 = q.6 * D.3109;
+  D.3113 = D.3112 + tt.7;
+  D.3114 = D.3113 + q.6;
+  if (D.3113 >= D.3114)
+    goto <bb 10>;
+  else
+    goto <bb 16>;
+
+  <bb 16>:
+  index = D.3113;
+
+  <bb 6>:
+  D.3116 = num_points / num_threads;
+  D.3117 = num_points % num_threads;
+  if (D.3117 > index)
+    goto <bb 7>;
+  else
+    goto <bb 8>;
+
+  <bb 9>:
+  num_points_per_thread = D.3116 + iftmp.2;
+  D.3120 = check_points (index, num_points_per_thread);
+  inside_points = D.3120 + inside_points;
+  index = index + 1;
+  if (index < D.3114)
+    goto <bb 6>;
+  else
+    goto <bb 10>;
+
+  <bb 8>:
+  iftmp.2 = 0;
+  goto <bb 9>;
+
+  <bb 7>:
+  iftmp.2 = 1;
+  goto <bb 9>;
+
+  <bb 18>:
+  tt.7 = 0;
+  q.6 = q.6 + 1;
+  goto <bb 19>;
+
+}
+
+
+
+;; Function main (main, funcdef_no=29, decl_uid=3027, cgraph_uid=29, symbol_order=29)
+
+Merging blocks 4 and 21
+Merging blocks 4 and 14
+main (int argc, char * * argv)
+{
+  unsigned int D.3100;
+  unsigned int D.3098;
+  unsigned int D.3099;
+  unsigned int tt.7;
+  unsigned int q.6;
+  int D.3094;
+  unsigned int D.3095;
+  int D.3092;
+  unsigned int D.3093;
+  unsigned int num_points_per_thread;
+  unsigned int num_threads.4;
+  unsigned int index;
+  double pi;
+  unsigned int inside_points;
+  unsigned int num_threads;
+  unsigned int num_points;
+  double D.3072;
+  double D.3071;
+  double D.3070;
+  int D.3062;
+  int num_threads.1;
+  int D.3060;
+  int D.3059;
+  char * D.3058;
+  char * * D.3057;
+  int D.3056;
+  char * D.3055;
+  char * * D.3054;
+  int D.3053;
+  struct _IO_FILE * stdout.0;
+  unsigned int D.3087;
+  unsigned int * D.3088;
+  unsigned int D.3089;
+  struct .omp_data_s.3 .omp_data_o.5;
+
+  <bb 2>:
+  if (argc != 3)
+    goto <bb 3>;
+  else
+    goto <bb 4>;
+
+  <bb 3>:
+  stdout.0 = stdout;
+  fprintf (stdout.0, "Wrong number of parameters\n");
+  D.3053 = 0;
+  goto <bb 5>;
+
+  <bb 4>:
+  D.3054 = argv + 8;
+  D.3055 = *D.3054;
+  D.3056 = atoi (D.3055);
+  num_points = (unsigned int) D.3056;
+  printf ("Number of points is %d\n", num_points);
+  D.3057 = argv + 16;
+  D.3058 = *D.3057;
+  D.3059 = atoi (D.3058);
+  num_threads = (unsigned int) D.3059;
+  inside_points = 0;
+  D.3060 = omp_get_max_threads ();
+  stdout.0 = stdout;
+  fprintf (stdout.0, "%d\n", D.3060);
+  num_threads.1 = (int) num_threads;
+  omp_set_num_threads (num_threads.1);
+  D.3062 = omp_get_max_threads ();
+  stdout.0 = stdout;
+  fprintf (stdout.0, "%d\n", D.3062);
+  .omp_data_o.5.inside_points = inside_points;
+  .omp_data_o.5.num_threads = num_threads;
+  .omp_data_o.5.num_points = num_points;
+  __builtin_GOMP_parallel (main._omp_fn.0, &.omp_data_o.5, 0, 0);
+  inside_points = .omp_data_o.5.inside_points;
+  .omp_data_o.5 = {CLOBBER};
+  D.3070 = (double) inside_points;
+  D.3071 = D.3070 * 4.0e+0;
+  D.3072 = (double) num_points;
+  pi = D.3071 / D.3072;
+  stdout.0 = stdout;
+  fprintf (stdout.0, "Computed pi is %f\n", pi);
+  D.3053 = 0;
+
+  <bb 5>:
+  return D.3053;
+
+}
+
+
+
+;; Function atoi (atoi, funcdef_no=18, decl_uid=2448, cgraph_uid=18, symbol_order=18)
+
+__attribute__((__gnu_inline__, __pure__, __leaf__, __nothrow__))
+atoi (const char * __nptr)
+{
+  long int D.3122;
+  int D.3121;
+
+  <bb 2>:
+  D.3122 = strtol (__nptr, 0B, 10);
+  D.3121 = (int) D.3122;
+  return D.3121;
+
+}
+
+
+
+;; Function fprintf (<unset-asm-name>, funcdef_no=10, decl_uid=738, cgraph_uid=10, symbol_order=10)
+
+__attribute__((__artificial__, __gnu_inline__, __always_inline__))
+fprintf (struct FILE * restrict __stream, const char * restrict __fmt)
+{
+  int D.3124;
+
+  <bb 2>:
+  D.3124 = __fprintf_chk (__stream, 1, __fmt, __builtin_va_arg_pack ());
+  return D.3124;
+
+}
+
+
