@@ -1,5 +1,5 @@
 /* compile with gcc -O3 -fopenmp -fdump-tree-all
-> for intermediate representation files*/
+> for intermediate representation files0*/
 
 #define _XOPEN_SOURCE 700
 #define OMP_NUM_THREADS 4
