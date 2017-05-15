@@ -15,8 +15,6 @@ var elevation = 0.0;
 var angle = -30.0;
 
 var delta = 0.1;
-var matrixPositionHandle,
-	vertexPositionHandle;
 
 // Create cube parameters
 var cubeTx = 0.0;
@@ -29,6 +27,9 @@ var cubeS = 0.5;
 var flag = 0;
 
 var lastUpdateTime = (new Date).getTime();
+
+var matrixPositionHandle, vertexPositionHandle;
+var VBO, IBO;
 
 function main(){
 
@@ -52,9 +53,12 @@ function main(){
 			projectionMatrix = utils.multiplyMatrices(perspectiveMatrix, viewMatrix);
 			console.log(perspectiveMatrix);
 
-			var VBO = gl.createBuffer();
+			VBO = gl.createBuffer();
 			gl.bindBuffer(gl.ARRAY_BUFFER, VBO);
 			gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
+			IBO = gl.createBuffer();
+			gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, IBO);
+			gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(indices), gl.STATIC_DRAW);
 
 			//*** The (for now) obscure GLSL part... to take for granted.
 				var vs = 'attribute vec3 pos1; uniform mat4 pMatrix; void main() { gl_Position = pMatrix*vec4(pos1, 1.0);}';
@@ -91,18 +95,23 @@ function main(){
 
 	function computeMatrix() {
 		viewMatrix = utils.MakeView(cx, cy, cz, elevation, angle);
-		projectionMatrix = utils.multiplyMatrices(perspectiveMatrix, viewMatrix);
+		projectionMatrix = utils.multiplyMatrices(viewMatrix, worldMatrix);
+		projectionMatrix = utils.multiplyMatrices(perspectiveMatrix, projectionMatrix);
 	}
 
 	function drawScene() {
+		animate();
+
 		computeMatrix();
 
 		gl.uniformMatrix4fv(matrixPositionHandle, gl.FALSE, utils.transposeMatrix(projectionMatrix));
-
+		gl.bindBuffer(gl.ARRAY_BUFFER, VBO);
 		gl.enableVertexAttribArray(vertexPositionHandle);
 		gl.vertexAttribPointer(vertexPositionHandle, 3, gl.FLOAT, false, 0, 0);
+		gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, IBO);
+		gl.drawElements(gl.TRIANGLES, indices.length, gl.UNSIGNED_SHORT, 0);
 
-		gl.drawArrays(gl.LINES, 0, 24);
+		// gl.drawArrays(gl.LINES, 0, 24);
 
 		window.requestAnimationFrame(drawScene);
 	}
