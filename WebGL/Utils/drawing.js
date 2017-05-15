@@ -28,7 +28,7 @@ var flag = 0;
 
 var lastUpdateTime = (new Date).getTime();
 
-var matrixPositionHandle, vertexPositionHandle;
+var matrixPositionHandle, vertexPositionHandle, vertexColorHandle;
 var VBO, IBO;
 
 function main(){
@@ -61,8 +61,8 @@ function main(){
 			gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(indices), gl.STATIC_DRAW);
 
 			//*** The (for now) obscure GLSL part... to take for granted.
-				var vs = 'attribute vec3 pos1; uniform mat4 pMatrix; void main() { gl_Position = pMatrix*vec4(pos1, 1.0);}';
-				var fs = 'precision mediump float; void main() { gl_FragColor = vec4(0.8,0,0,1); }';
+				var vs = 'attribute vec3 pos1; attribute vec3 col1; varying vec3 col2; uniform mat4 pMatrix; void main() { col2 = col1; gl_Position = pMatrix*vec4(pos1, 1.0);}';
+				var fs = 'precision mediump float; varying vec3 col2; void main() { gl_FragColor = vec4(col2,1); }';
 				program = gl.createProgram();
 				var v1 = gl.createShader(gl.VERTEX_SHADER);
 				gl.shaderSource(v1, vs);
@@ -79,14 +79,17 @@ function main(){
 				gl.attachShader(program, v1);
 				gl.attachShader(program, v2);
 				gl.linkProgram(program);
-			//*** End of the obscure par
+			//*** End of the obscure part
 
 			gl.useProgram(program);
 
 			vertexPositionHandle = gl.getAttribLocation(program, 'pos1');
+			vertexColorHandle = gl.getAttribLocation(program, 'col1');
 			matrixPositionHandle = gl.getUniformLocation(program, 'pMatrix');
 
 			initInteraction();
+
+			gl.enable(gl.DEPTH_TEST);
 
 			drawScene();
 	}else{
@@ -107,7 +110,9 @@ function main(){
 		gl.uniformMatrix4fv(matrixPositionHandle, gl.FALSE, utils.transposeMatrix(projectionMatrix));
 		gl.bindBuffer(gl.ARRAY_BUFFER, VBO);
 		gl.enableVertexAttribArray(vertexPositionHandle);
-		gl.vertexAttribPointer(vertexPositionHandle, 3, gl.FLOAT, false, 0, 0);
+		gl.vertexAttribPointer(vertexPositionHandle, 3, gl.FLOAT, false, 4 * 6, 0);
+		gl.enableVertexAttribArray(vertexColorHandle);
+		gl.vertexAttribPointer(vertexColorHandle, 3, gl.FLOAT, false, 4 * 6, 0);
 		gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, IBO);
 		gl.drawElements(gl.TRIANGLES, indices.length, gl.UNSIGNED_SHORT, 0);
 
