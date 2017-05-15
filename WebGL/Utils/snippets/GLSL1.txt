@@ -1,0 +1,14 @@
+		//*** The (for now) obscure GLSL part... to take for granted.
+			var vs = 'attribute vec3 pos1; void main() { gl_Position = vec4(pos1, 1); gl_PointSize = 5.0;}';
+			var fs = 'precision mediump float; void main() { gl_FragColor = vec4(0.8,0,0,1); }';
+			program = gl.createProgram();
+			var v1 = gl.createShader(gl.VERTEX_SHADER);
+			gl.shaderSource(v1, vs);
+			gl.compileShader(v1);
+			var v2 = gl.createShader(gl.FRAGMENT_SHADER);
+			gl.shaderSource(v2, fs)
+			gl.compileShader(v2);		
+			gl.attachShader(program, v1);
+			gl.attachShader(program, v2);
+			gl.linkProgram(program);		
+		//*** End of the obscure part
