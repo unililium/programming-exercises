@@ -110,9 +110,9 @@ function main(){
 		gl.uniformMatrix4fv(matrixPositionHandle, gl.FALSE, utils.transposeMatrix(projectionMatrix));
 		gl.bindBuffer(gl.ARRAY_BUFFER, VBO);
 		gl.enableVertexAttribArray(vertexPositionHandle);
-		gl.vertexAttribPointer(vertexPositionHandle, 3, gl.FLOAT, false, 4 * 6, 0);
+		gl.vertexAttribPointer(vertexPositionHandle, 3, gl.FLOAT, false, 4*6, 0);
 		gl.enableVertexAttribArray(vertexColorHandle);
-		gl.vertexAttribPointer(vertexColorHandle, 3, gl.FLOAT, false, 4 * 6, 0);
+		gl.vertexAttribPointer(vertexColorHandle, 3, gl.FLOAT, false, 4*6, 4*3);
 		gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, IBO);
 		gl.drawElements(gl.TRIANGLES, indices.length, gl.UNSIGNED_SHORT, 0);
 
