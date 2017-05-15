@@ -4,7 +4,8 @@ var gl = null,
 
 var projectionMatrix,		// stack matrix
 	perspectiveMatrix,		// frustum
-	viewMatrix;				// camera
+	viewMatrix,				// camera
+	worldMatrix;
 
 // Create camera parameters
 var cx = 0.5;
@@ -16,6 +17,18 @@ var angle = -30.0;
 var delta = 0.1;
 var matrixPositionHandle,
 	vertexPositionHandle;
+
+// Create cube parameters
+var cubeTx = 0.0;
+var cubeTy = 0.0;
+var cubeTz = -1.0;
+var cubeRx = 0.0;
+var cubeRy = 0.0;
+var cubeRz = 0.0;
+var cubeS = 0.5;
+var flag = 0;
+
+var lastUpdateTime = (new Date).getTime();
 
 function main(){
 
@@ -92,6 +105,25 @@ function main(){
 		gl.drawArrays(gl.LINES, 0, 24);
 
 		window.requestAnimationFrame(drawScene);
+	}
+
+	function animate() {
+		var currentTime = (new Date).getTime();
+		if(lastUpdateTime) {
+			var deltaC = (30 * (currentTime - lastUpdateTime)) / 1000.0;
+
+			cubeRx += deltaC;
+			cubeRy -= deltaC;
+			cubeRz += deltaC;
+			if (flag == 0) cubeS += deltaC / 100;
+			else cubeS -= deltaC / 100;
+
+			if (cubeS >= 1.5) flag = 1;
+			if (cubeS < 0.5) flag = 0;
+		}
+
+		worldMatrix = utils.MakeWorld(cubeTx, cubeTy, cubeTz, cubeRx, cubeRy, cubeRz, cubeS);
+		lastUpdateTime = currentTime;
 	}
 
 	//Interaction Function for moving Camera coordinates.
