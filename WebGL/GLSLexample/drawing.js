@@ -61,7 +61,7 @@ function main(){
 		gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, IBO);
 		gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(indices), gl.STATIC_DRAW);
 
-		utils.loadFile([shaderDir + 'vs.glsl', shaderDir + 'fs.glsl'],
+		utils.loadFiles([shaderDir + 'vs.glsl', shaderDir + 'fs.glsl'],
 			function(shaderText) {	// callback function
 
 				var vertexShader = gl.createShader(gl.VERTEX_SHADER);
@@ -75,17 +75,17 @@ function main(){
 				gl.shaderSource(fragmentShader, shaderText[1])
 				gl.compileShader(fragmentShader);
 				if (!gl.getShaderParameter(fragmentShader, gl.COMPILE_STATUS)) {
-					alert("ERROR IN VS SHADER : " + gl.getShaderInfoLog(fragmentShader));
+					alert("ERROR IN FS SHADER : " + gl.getShaderInfoLog(fragmentShader));
 				}
+
+				shaderProgram = gl.createProgram();
+				gl.attachShader(shaderProgram, vertexShader);
+				gl.attachShader(shaderProgram, fragmentShader);
+				gl.linkProgram(shaderProgram);
 			}
 		);
 
-			shaderProgram = gl.createprogram();
-			gl.attachShader(shaderProgram, v1);
-			gl.attachShader(shaderProgram, v2);
-			gl.linkprogram(shaderProgram);
-
-		gl.useprogram(shaderProgram);
+		gl.useProgram(shaderProgram);
 
 		vertexPositionHandle = gl.getAttribLocation(shaderProgram, 'pos1');
 		vertexColorHandle = gl.getAttribLocation(shaderProgram, 'col1');
