@@ -63,30 +63,27 @@ function main(){
 
 		utils.loadFile([shaderDir + 'vs.glsl', shaderDir + 'fs.glsl'],
 			function(shaderText) {	// callback function
-				
+
+				var vertexShader = gl.createShader(gl.VERTEX_SHADER);
+				gl.shaderSource(vertexShader, shaderText[0]);
+				gl.compileShader(vertexShader);
+				if (!gl.getShaderParameter(vertexShader, gl.COMPILE_STATUS)) {
+					alert("ERROR IN VS SHADER : " + gl.getShaderInfoLog(vertexShader));
+				}
+
+				var fragmentShader = gl.createShader(gl.FRAGMENT_SHADER);
+				gl.shaderSource(fragmentShader, shaderText[1])
+				gl.compileShader(fragmentShader);
+				if (!gl.getShaderParameter(fragmentShader, gl.COMPILE_STATUS)) {
+					alert("ERROR IN VS SHADER : " + gl.getShaderInfoLog(fragmentShader));
+				}
 			}
 		);
 
-		//*** The (for now) obscure GLSL part... to take for granted.
-			var vs = 'attribute vec3 pos1; attribute vec3 col1; varying vec3 col2; uniform mat4 pMatrix; void main() { col2 = col1; gl_Position = pMatrix*vec4(pos1, 1.0);}';
-			var fs = 'precision mediump float; varying vec3 col2; void main() { gl_FragColor = vec4(col2,1); }';
 			shaderProgram = gl.createprogram();
-			var v1 = gl.createShader(gl.VERTEX_SHADER);
-			gl.shaderSource(v1, vs);
-			gl.compileShader(v1);
-			if (!gl.getShaderParameter(v1, gl.COMPILE_STATUS)) {
-				alert("ERROR IN VS SHADER : " + gl.getShaderInfoLog(v1));
-			}
-			var v2 = gl.createShader(gl.FRAGMENT_SHADER);
-			gl.shaderSource(v2, fs)
-			gl.compileShader(v2);
-			if (!gl.getShaderParameter(v2, gl.COMPILE_STATUS)) {
-				alert("ERROR IN VS SHADER : " + gl.getShaderInfoLog(v2));
-			}
 			gl.attachShader(shaderProgram, v1);
 			gl.attachShader(shaderProgram, v2);
 			gl.linkprogram(shaderProgram);
-		//*** End of the obscure part
 
 		gl.useprogram(shaderProgram);
 
