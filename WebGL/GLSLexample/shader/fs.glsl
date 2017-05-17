@@ -6,5 +6,5 @@ uniform vec4 lightColor;
 
 varying vec3 col2;
 void main() {
-    gl_FragColor = mDiffColor * lightColor * -dot(lightDirection, fdNormal);
+    gl_FragColor = mDiffColor * lightColor * max(-dot(lightDirection, normalize(fsNormal)), 0.0);
 }
