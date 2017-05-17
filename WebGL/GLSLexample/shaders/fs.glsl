@@ -2,7 +2,7 @@ precision mediump float;
 
 uniform vec4 mDiffColor; // cube material color
 uniform vec3 lightDirection; // directional light direction
-uniform vec4 lightColor;
+uniform vec4 lightColor; // light color
 
 varying vec3 fsNormal;
 void main() {

@@ -98,9 +98,9 @@ function main(){
 		vertexPositionHandle = gl.getAttribLocation(shaderProgram, 'inPosition');
 		vertexNormalHandle = gl.getAttribLocation(shaderProgram, 'inNormal');
 		matrixPositionHandle = gl.getUniformLocation(shaderProgram, 'wvpMatrix');
-		materialDiffColorHandle = gl.getAttribLocation(shaderProgram, 'mDiffColor');
-		lightDirectionHandle = gl.getAttribLocation(shaderProgram, 'lightDirection');
-		lightColorHandle = gl.getAttribLocation(shaderProgram, 'lightColor');
+		materialDiffColorHandle = gl.getUniformLocation(shaderProgram, 'mDiffColor');
+		lightDirectionHandle = gl.getUniformLocation(shaderProgram, 'lightDirection');
+		lightColorHandle = gl.getUniformLocation(shaderProgram, 'lightColor');
 
 		initInteraction();
 
@@ -193,9 +193,9 @@ function main(){
 
 		gl.uniformMatrix4fv(matrixPositionHandle, gl.FALSE, utils.transposeMatrix(projectionMatrix));
 
-		gl.uniformMatrix4fv(materialDiffColorHandle, new Float32Array(cubeMaterialColor));
-		gl.uniformMatrix4fv(lightDirectionHandle,new Float32Array(directionalLight));
-		gl.uniformMatrix4fv(lightColorHandle, new Float32Array(directionalLightColor));
+		gl.uniform4fv(materialDiffColorHandle, new Float32Array(cubeMaterialColor));
+		gl.uniform3fv(lightDirectionHandle, new Float32Array(directionalLight));
+		gl.uniform4fv(lightColorHandle, new Float32Array(directionalLightColor));
 
 		gl.bindBuffer(gl.ARRAY_BUFFER, VBO);
 		gl.enableVertexAttribArray(vertexPositionHandle);
