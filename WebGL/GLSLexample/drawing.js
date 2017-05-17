@@ -11,14 +11,22 @@ var projectionMatrix,		//stack max
 
 var VBO, IBO;
 
-var vertexPositionHandle, vertexColorHandle, matrixPositionHandle;
+var vertexPositionHandle, vertexNormalHandle, matrixPositionHandle,
+	materialDiffColorHandle, lightDirectionHandle, lightColorHandle;
+
+// Light parameters
+var dirLightAlpha = -utils.degToRad(60);
+var dirLightBeta = -utils.degToRad(120);
+var directionalLight = [Math.cos(dirLightAlpha) * Math.cos(dirLightBeta), Math.sin(dirLightAlpha), Math.cos(dirLightAlpha) * Math.sin(dirLightBeta)];
+var directionalLightColor = [0.1, 1.0, 1.0, 1.0];
+var cubeMaterialColor = [0.5, 0.5, 0.5, 1.0];
 
 //Create camera parameters
 var cx = 0.5;
 var cy = 0.0;
 var cz = 1.0;
 var elevation = 0.0;
-var angle = -30.0;
+var angle = 0.0;
 
 var delta = 0.1;
 
@@ -87,10 +95,12 @@ function main(){
 
 		gl.useProgram(shaderProgram);
 
-		vertexPositionHandle = gl.getAttribLocation(shaderProgram, 'pos1');
-		vertexColorHandle = gl.getAttribLocation(shaderProgram, 'col1');
-		matrixPositionHandle = gl.getUniformLocation(shaderProgram, 'pMatrix');
-
+		vertexPositionHandle = gl.getAttribLocation(shaderProgram, 'inPosition');
+		vertexNormalHandle = gl.getAttribLocation(shaderProgram, 'inNormal');
+		matrixPositionHandle = gl.getUniformLocation(shaderProgram, 'wvpMatrix');
+		materialDiffColorHandle = gl.getAttribLocation(shaderProgram, 'mDiffColor');
+		lightDirectionHandle = gl.getAttribLocation(shaderProgram, 'lightDirection');
+		lightColorHandle = gl.getAttribLocation(shaderProgram, 'lightColor');
 
 		initInteraction();
 
@@ -183,12 +193,16 @@ function main(){
 
 		gl.uniformMatrix4fv(matrixPositionHandle, gl.FALSE, utils.transposeMatrix(projectionMatrix));
 
+		gl.uniformMatrix4fv(materialDiffColorHandle, new Float32Array(cubeMaterialColor));
+		gl.uniformMatrix4fv(lightDirectionHandle,new Float32Array(directionalLight));
+		gl.uniformMatrix4fv(lightColorHandle, new Float32Array(directionalLightColor));
+
 		gl.bindBuffer(gl.ARRAY_BUFFER, VBO);
 		gl.enableVertexAttribArray(vertexPositionHandle);
 		gl.vertexAttribPointer(vertexPositionHandle, 3, gl.FLOAT, false, 4*6, 0);
 
-		gl.enableVertexAttribArray(vertexColorHandle);
-		gl.vertexAttribPointer(vertexColorHandle, 3, gl.FLOAT, false, 4*6, 4*3);
+		gl.enableVertexAttribArray(vertexNormalHandle);
+		gl.vertexAttribPointer(vertexNormalHandle, 3, gl.FLOAT, false, 4*6, 4*3);
 
 		gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, IBO);
 		gl.drawElements(gl.TRIANGLES, indices.length, gl.UNSIGNED_SHORT, 0);

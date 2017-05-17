@@ -1,9 +1,11 @@
-attribute vec3 pos1;
-attribute vec3 col1;
-varying vec3 col2;
+attribute vec3 inPosition;
+attribute vec3 inNormal;
+
+varying vec3 fsNormal;
+
 uniform mat4 pMatrix;
 
 void main() {
-    col2 = col1;
-    gl_Position = pMatrix * vec4(pos1, 1.0);
+    fsNormal = inNormal;
+    gl_Position = pMatrix * vec4(inPosition, 1.0);
 }

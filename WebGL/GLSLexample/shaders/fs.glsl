@@ -1,5 +1,10 @@
 precision mediump float;
+
+uniform vec4 mDiffColor; // cube material color
+uniform vec3 lightDirection; // directional light direction
+uniform vec4 lightColor;
+
 varying vec3 col2;
 void main() {
-    gl_FragColor = vec4(col2,1);
-} 
+    gl_FragColor = mDiffColor * lightColor * max(-dot(lightDirection, normalize(fsNormal)), 0.0);
+}
