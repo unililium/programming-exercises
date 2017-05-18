@@ -133,8 +133,8 @@ function drawScene() {
 
 
 
-function webGLStart() {
-    var canvas = document.getElementById("lesson01-canvas");
+function main() {
+    var canvas = document.getElementById("my-canvas");
     initGL(canvas);
     initShaders();
     initBuffers();

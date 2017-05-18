@@ -1,11 +1,21 @@
 <!doctype html>
 <html>
-    <head>
-        <title>HTML5 Canvas element</title>
-        <script src="drawing.js"></script>
-    </head>
-    <body style="background-color:grey;" onLoad="main();">
-        <canvas id="my-canvas" width="800" height="600" style="background-color:white;">
+
+<head>
+    <title>HTML5 Canvas element</title>
+    <script src="glmatrix.min.js"></script>
+    <script src="drawing.js"></script>
+    <script id="shader-fs" type="x-shader/x-fragment">
+        precision mediump float; void main(void) { gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0); }
+    </script>
+    <script id="shader-vs" type="x-shader/x-vertex">
+        attribute vec3 aVertexPosition; uniform mat4 uMVMatrix; uniform mat4 uPMatrix; void main(void) { gl_Position = uPMatrix * uMVMatrix * vec4(aVertexPosition, 1.0); }
+    </script>
+</head>
+
+<body style="background-color:grey;" onLoad="main();">
+    <canvas id="my-canvas" width="800" height="600" style="background-color:white;">
         </canvas>
-    </body>
+</body>
+
 </html>
