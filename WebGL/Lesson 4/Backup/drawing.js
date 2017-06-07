@@ -8,6 +8,7 @@ var projectionMatrix = new Array();		//stack max
 var	perspectiveMatrix,		//perspective - frustum
 	viewMatrix;				//camera matrix
 var	worldMatrix = new Array();			//position / rotation / scale of the cube
+var viewWorldMatrix = new Array();
 
 var normalMatrix;
 
@@ -15,8 +16,8 @@ var VBO, IBO;
 
 var vertexPositionHandle, vertexNormalHandle, matrixPositionHandle,
 	normalMatrixHandle, vertexMatrixHandle,
-	materialDiffColorHandle, materialSpecColorHandle, materialSpecPowerHandle, lightDirectionHandle, lightColorHandle,
-	eyePositionHandle;
+	materialDiffColorHandle, materialSpecColorHandle, materialSpecPowerHandle, lightDirectionHandle, lightColorHandle;
+	// eyePositionHandle;
 
 //Light parameters
 var	dirLightAlpha = -utils.degToRad(60);
@@ -26,10 +27,13 @@ var directionalLight = [Math.cos(dirLightAlpha) * Math.cos(dirLightBeta),
 						Math.sin(dirLightAlpha),
 						Math.cos(dirLightAlpha) * Math.sin(dirLightBeta)];
 
+var directionalLightModified = new Float32Array(3);
+
 var directionalLightColor = [1.0, 1.0, 1.0, 1.0];
 
 var cubeMaterialColor = [1.0, 0.5, 0.5, 1.0];
 var cubeSpecularColor = [1.0, 0.3, 0.3, 1.0];
+var cubeSpecularPower = 20.0;
 
 //Create camera parameters
 var cx = 5.0;
@@ -56,7 +60,7 @@ worldMatrix[0] = utils.MakeWorld(-3.0, 0.0, -1.5, 0.0, 0.0, 0.0, 0.5);
 worldMatrix[1] = utils.MakeWorld(3.0, 0.0, -1.5, 0.0, 0.0, 0.0, 0.5);
 worldMatrix[2] = utils.MakeWorld(0.0, 0.0, -3.0, 0.0, 0.0, 0.0, 0.5);
 
-var observerPosition = new Float32Array(4);
+// var observerPosition = new Float32Array(4);
 
 function main() {
 
@@ -201,7 +205,7 @@ function main() {
 										cubeRx, cubeRy, cubeRz,
 										cubeS);
 
-		normalMatrix = utils.invertMatrix(utils.transposeMatrix(worldMatrix[3]));
+		// normalMatrix = utils.invertMatrix(utils.transposeMatrix(worldMatrix[3]));
 
 		lastUpdateTime = currenTime;
 	}
@@ -209,9 +213,16 @@ function main() {
 	function computeMatrix(){
 		viewMatrix = utils.MakeView(cx, cy, cz, elevation, angle);
 
+		var viewMatrix3 = utils.sub3x3from4x4(viewMatrix);
+
+		directionalLightModified = utils.multiplyMatrix3Vector3(viewMatrix3, directionalLight);
+
+		normalMatrix = utils.multiplyMatrices(viewMatrix, worldMatrix[3]);
+
 		for(i = 0; i < 4; i++) {
 			projectionMatrix[i] = utils.multiplyMatrices(viewMatrix, worldMatrix[i]);
 			projectionMatrix[i] = utils.multiplyMatrices(perspectiveMatrix, projectionMatrix[i]);
+			worldMatrix[i] = utils.multiplyMatrices(viewMatrix, worldMatrix[i]);
 		}
 
 		observerPosition[0] = cx;
@@ -227,7 +238,7 @@ function main() {
 
 		gl.uniform4fv(materialDiffColorHandle, new Float32Array(cubeMaterialColor));
 		gl.uniform4fv(materialSpecColorHandle, new Float32Array(cubeSpecularColor));
-		gl.uniform1f(materialSpecPowerHandle, 50.0);
+		gl.uniform1f(materialSpecPowerHandle, cubeSpecularPower);
 		gl.uniform3fv(lightDirectionHandle, new Float32Array(directionalLight));
 		gl.uniform4fv(lightColorHandle, new Float32Array(directionalLightColor));
 		gl.uniform3fv(eyePositionHandle, observerPosition);
