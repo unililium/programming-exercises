@@ -222,12 +222,12 @@ function main() {
 		for(i = 0; i < 4; i++) {
 			projectionMatrix[i] = utils.multiplyMatrices(viewMatrix, worldMatrix[i]);
 			projectionMatrix[i] = utils.multiplyMatrices(perspectiveMatrix, projectionMatrix[i]);
-			worldMatrix[i] = utils.multiplyMatrices(viewMatrix, worldMatrix[i]);
+			viewWorldMatrix[i] = utils.multiplyMatrices(viewMatrix, worldMatrix[i]);
 		}
 
-		observerPosition[0] = cx;
+		/* observerPosition[0] = cx;
 		observerPosition[1] = cy;
-		observerPosition[2] = cz;
+		observerPosition[2] = cz; */
 	}
 
 	function drawScene(){
@@ -239,20 +239,20 @@ function main() {
 		gl.uniform4fv(materialDiffColorHandle, new Float32Array(cubeMaterialColor));
 		gl.uniform4fv(materialSpecColorHandle, new Float32Array(cubeSpecularColor));
 		gl.uniform1f(materialSpecPowerHandle, cubeSpecularPower);
-		gl.uniform3fv(lightDirectionHandle, new Float32Array(directionalLight));
+		gl.uniform3fv(lightDirectionHandle, new Float32Array(directionalLightModified));
 		gl.uniform4fv(lightColorHandle, new Float32Array(directionalLightColor));
-		gl.uniform3fv(eyePositionHandle, observerPosition);
+		// gl.uniform3fv(eyePositionHandle, observerPosition);
 
 		for(i = 0; i < 4; i++) {
 			gl.uniformMatrix4fv(matrixPositionHandle, gl.FALSE, utils.transposeMatrix(projectionMatrix[i]));
 
 			if(i < 3) {
-				gl.uniformMatrix4fv(normalMatrixHandle, gl.FALSE, utils.transposeMatrix(worldMatrix[i]));
+				gl.uniformMatrix4fv(normalMatrixHandle, gl.FALSE, utils.transposeMatrix(viewWorldMatrix[i]));
 			} else {
 				gl.uniformMatrix4fv(normalMatrixHandle, gl.FALSE, utils.transposeMatrix(normalMatrix));
 			}
 
-			gl.uniformMatrix4fv(vertexMatrixHandle, gl.FALSE, utils.transposeMatrix(worldMatrix[i]));
+			gl.uniformMatrix4fv(vertexMatrixHandle, gl.FALSE, utils.transposeMatrix(viewWorldMatrix[i]));
 
 			gl.bindBuffer(gl.ARRAY_BUFFER, VBO);
 			gl.enableVertexAttribArray(vertexPositionHandle);
