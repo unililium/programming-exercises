@@ -13,7 +13,12 @@ varying vec3 fsPosition;
 
 void main() {
 
-	vec4 lambert = mDiffColor * lightColor * clamp(-dot(lightDirection, normalize(fsNormal)), 0.0, 1.0);
+	vec3 nEyeDirection = normalize(eyePosition - fsPosition);
+	vec3 nLightDirection = -normalize(lightDirection);
+	vec3 nNormal = normalize(fsNormal);
 
-	gl_FragColor = min(lambert, vec4(1.0, 1.0, 1.0, 1.0));
+	vec4 diffuse = mDiffColor * lightColor * clamp(-dot(nLightDirection, nNormal)), 0.0, 1.0);
+	vec3 hVec = normalize(nEyeDirection + nLightDirection);
+	vec4 specular = mSpecColor * lightColor * pow(clamp(dot(nNormal, hVec), 0.0, 1.0), mSpecPower);
+	gl_FragColor = min(diffuse + specular, vec4(1.0, 1.0, 1.0, 1.0));
 }
