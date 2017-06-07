@@ -15,7 +15,7 @@ var VBO, IBO;
 
 var vertexPositionHandle, vertexNormalHandle, matrixPositionHandle,
 	// normalMatrixHandle, vertexMatrixHandle,
-	materialDiffColorHandle, materialSpecColorHandle, materialSpecPowerHandle, lightDirectionHandle, lightColorHandle;
+	materialDiffColorHandle, materialSpecColorHandle, materialSpecPowerHandle, lightDirectionHandle, lightColorHandle,
 	eyePositionHandle;
 
 //Light parameters
@@ -59,6 +59,7 @@ worldMatrix[0] = utils.MakeWorld(-3.0, 0.0, -1.5, 0.0, 0.0, 0.0, 0.5);
 worldMatrix[1] = utils.MakeWorld(3.0, 0.0, -1.5, 0.0, 0.0, 0.0, 0.5);
 worldMatrix[2] = utils.MakeWorld(0.0, 0.0, -3.0, 0.0, 0.0, 0.0, 0.5);
 
+var observerPosition;
 var observerPositionObj = new Array(4);
 var directionalLightObj = new Array(4);
 
@@ -226,8 +227,8 @@ function main() {
 			projectionMatrix[i] = utils.multiplyMatrices(perspectiveMatrix, projectionMatrix[i]);
 			// viewWorldMatrix[i] = utils.multiplyMatrices(viewMatrix, worldMatrix[i]);
 
-			observerPositionObj = utils.multiplyMatrixVector(utils.invertMatrix(worldMatrix[i]), eyeTemp);
-			directionalLightObj = utils.multiplyMatrix3Vector3(utils.transposeMatrix3(utils.sub3x3from4x4(worldMatrix[i])), directionalLight);
+			observerPositionObj[i] = utils.multiplyMatrixVector(utils.invertMatrix(worldMatrix[i]), eyeTemp);
+			directionalLightObj[i] = utils.multiplyMatrix3Vector3(utils.transposeMatrix3(utils.sub3x3from4x4(worldMatrix[i])), directionalLight);
 		}
 
 		/* observerPosition[0] = cx;
@@ -244,20 +245,21 @@ function main() {
 		gl.uniform4fv(materialDiffColorHandle, new Float32Array(cubeMaterialColor));
 		gl.uniform4fv(materialSpecColorHandle, new Float32Array(cubeSpecularColor));
 		gl.uniform1f(materialSpecPowerHandle, cubeSpecularPower);
-		gl.uniform3fv(lightDirectionHandle, new Float32Array(directionalLightModified));
 		gl.uniform4fv(lightColorHandle, new Float32Array(directionalLightColor));
-		// gl.uniform3fv(eyePositionHandle, observerPosition);
+
 
 		for(i = 0; i < 4; i++) {
 			gl.uniformMatrix4fv(matrixPositionHandle, gl.FALSE, utils.transposeMatrix(projectionMatrix[i]));
+			gl.uniform3f(lightDirectionHandle, directionalLightObj[i][0], directionalLightObj[i][1], directionalLightObj[i][2], directionalLightObj[i][3]);
+			gl.uniform3f(eyePositionHandle, observerPositionObj[i][0], observerPositionObj[i][1], observerPositionObj[i][2]);
 
-			if(i < 3) {
+			/* if(i < 3) {
 				gl.uniformMatrix4fv(normalMatrixHandle, gl.FALSE, utils.transposeMatrix(viewWorldMatrix[i]));
 			} else {
 				gl.uniformMatrix4fv(normalMatrixHandle, gl.FALSE, utils.transposeMatrix(normalMatrix));
-			}
+			} */
 
-			gl.uniformMatrix4fv(vertexMatrixHandle, gl.FALSE, utils.transposeMatrix(viewWorldMatrix[i]));
+			// gl.uniformMatrix4fv(vertexMatrixHandle, gl.FALSE, utils.transposeMatrix(viewWorldMatrix[i]));
 
 			gl.bindBuffer(gl.ARRAY_BUFFER, VBO);
 			gl.enableVertexAttribArray(vertexPositionHandle);
