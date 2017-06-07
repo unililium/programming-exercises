@@ -1,4 +1,9 @@
+//Utils ver. 0.3
+//Includes minimal mat3 support
+//Includes the keys handling function
+
 var utils={
+
 
 //**** MODEL UTILS
 	// Function to load a 3D model in JSON format
@@ -14,8 +19,8 @@ var utils={
 		//send the request
 		xmlHttp.send();
 	},
-	
-	//function to convert decimal value of colors 
+
+	//function to convert decimal value of colors
 	decimalToHex: function(d, padding) {
 		var hex = Number(d).toString(16);
 		padding = typeof (padding) === "undefined" || padding === null ? padding = 2 : padding;
@@ -26,20 +31,59 @@ var utils={
 
 		return hex;
 	},
-	
-	
-	
-	
-	
-	
-//*** SHADERS UTILS	
+
+//*** Key handling utils
+	initInteraction: function(){
+		var keyFunction = function(e) {
+
+			if (e.keyCode == 37) {	// Left arrow
+				cx-=delta;
+			}
+			if (e.keyCode == 39) {	// Right arrow
+				cx+=delta;
+			}
+			if (e.keyCode == 38) {	// Up arrow
+				cz-=delta;
+			}
+			if (e.keyCode == 40) {	// Down arrow
+				cz+=delta;
+			}
+			if (e.keyCode == 107) {	// Add
+				cy+=delta;
+			}
+			if (e.keyCode == 109) {	// Subtract
+				cy-=delta;
+			}
+
+			if (e.keyCode == 65) {	// a
+				angle-=delta*10.0;
+			}
+			if (e.keyCode == 68) {	// d
+				angle+=delta*10.0;
+			}
+			if (e.keyCode == 87) {	// w
+				elevation+=delta*10.0;
+			}
+			if (e.keyCode == 83) {	// s
+				elevation-=delta*10.0;
+			}
+
+		}
+		//'window' is a JavaScript object (if "canvas", it will not work)
+		window.addEventListener("keyup", keyFunction, false);
+	},
+
+
+
+
+//*** SHADERS UTILS
 	/*Function to load a shader's code, compile it and return the handle to it
 	Requires:
 		path to the shader's text (url)
 
 	*/
-	
- 
+
+
 	loadFile: function (url, data, callback, errorCallback) {
 		// Set up an synchronous request! Important!
 		var request = new XMLHttpRequest();
@@ -48,17 +92,17 @@ var utils={
 		// Hook the event that gets called as the request progresses
 		request.onreadystatechange = function () {
 			// If the request is "DONE" (completed or failed) and if we got HTTP status 200 (OK)
-			
-				
+
+
 			if (request.readyState == 4 && request.status == 200) {
 					callback(request.responseText, data)
 				//} else { // Failed
 				//	errorCallback(url);
 			}
-			
+
 		};
 
-		request.send(null);    
+		request.send(null);
 	},
 
 	loadFiles: function (urls, callback, errorCallback) {
@@ -81,16 +125,16 @@ var utils={
 			this.loadFile(urls[i], i, partialCallback, errorCallback);
 		}
 	},
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+
+
+
+
+
+
+
+
+
+
 //*** MATH LIBRARY
 
 	degToRad: function(angle){
@@ -103,60 +147,107 @@ var utils={
 				0,0,1,0,
 				0,0,0,1];
 	},
-	
+
+	identityMatrix3: function() {
+		return [1,0,0,
+				0,1,0,
+				0,0,1];
+	},
+
+	// returns the 3x3 submatrix from a Matrix4x4
+	sub3x3from4x4: function(m){
+		out = [];
+		out[0] = m[0]; out[1] = m[1]; out[2] = m[2];
+		out[3] = m[4]; out[4] = m[5]; out[5] = m[6];
+		out[6] = m[8]; out[7] = m[9]; out[8] = m[10];
+		return out;
+	},
+
+	// Multiply the mat3 with a vec3.
+	multiplyMatrix3Vector3: function(m, a) {
+
+		out = [];
+		var x = a[0], y = a[1], z = a[2];
+		out[0] = x * m[0] + y * m[1] + z * m[2];
+		out[1] = x * m[3] + y * m[4] + z * m[5];
+		out[2] = x * m[6] + y * m[7] + z * m[8];
+		return out;
+	},
+
+//Transpose the values of a mat3
+
+	transposeMatrix3 : function(a) {
+
+		out = [];
+
+		out[0] = a[0];
+		out[1] = a[3];
+		out[2] = a[6];
+		out[3] = a[1];
+		out[4] = a[4];
+		out[5] = a[7];
+		out[6] = a[2];
+		out[7] = a[5];
+		out[8] = a[8];
+
+
+		return out;
+	},
+
+
 	//requires as a parameter a 4x4 matrix (array of 16 values)
-	invertMatrix: function(m){ 
-       
+	invertMatrix: function(m){
+
 		var out = [];
 		var inv = [];
 		var det, i;
 
-		inv[0] = m[5]  * m[10] * m[15] - m[5]  * m[11] * m[14] - m[9]  * m[6]  * m[15] + 
+		inv[0] = m[5]  * m[10] * m[15] - m[5]  * m[11] * m[14] - m[9]  * m[6]  * m[15] +
 				 m[9]  * m[7]  * m[14] + m[13] * m[6]  * m[11] - m[13] * m[7]  * m[10];
 
-		inv[4] = -m[4]  * m[10] * m[15] + m[4]  * m[11] * m[14] + m[8]  * m[6]  * m[15] - 
+		inv[4] = -m[4]  * m[10] * m[15] + m[4]  * m[11] * m[14] + m[8]  * m[6]  * m[15] -
 				  m[8]  * m[7]  * m[14] - m[12] * m[6]  * m[11] + m[12] * m[7]  * m[10];
 
-		inv[8] = m[4]  * m[9] * m[15] - m[4]  * m[11] * m[13] - m[8]  * m[5] * m[15] + 
+		inv[8] = m[4]  * m[9] * m[15] - m[4]  * m[11] * m[13] - m[8]  * m[5] * m[15] +
 				 m[8]  * m[7] * m[13] + m[12] * m[5] * m[11] - m[12] * m[7] * m[9];
 
-		inv[12] = -m[4]  * m[9] * m[14] + m[4]  * m[10] * m[13] + m[8]  * m[5] * m[14] - 
+		inv[12] = -m[4]  * m[9] * m[14] + m[4]  * m[10] * m[13] + m[8]  * m[5] * m[14] -
 				   m[8]  * m[6] * m[13] - m[12] * m[5] * m[10] + m[12] * m[6] * m[9];
 
-		inv[1] = -m[1]  * m[10] * m[15] + m[1]  * m[11] * m[14] + m[9]  * m[2] * m[15] - 
+		inv[1] = -m[1]  * m[10] * m[15] + m[1]  * m[11] * m[14] + m[9]  * m[2] * m[15] -
 				  m[9]  * m[3] * m[14] - m[13] * m[2] * m[11] +  m[13] * m[3] * m[10];
 
-		inv[5] = m[0]  * m[10] * m[15] - m[0]  * m[11] * m[14] - m[8]  * m[2] * m[15] + 
+		inv[5] = m[0]  * m[10] * m[15] - m[0]  * m[11] * m[14] - m[8]  * m[2] * m[15] +
 				 m[8]  * m[3] * m[14] + m[12] * m[2] * m[11] - m[12] * m[3] * m[10];
 
-		inv[9] = -m[0]  * m[9] * m[15] + m[0]  * m[11] * m[13] + m[8]  * m[1] * m[15] - 
+		inv[9] = -m[0]  * m[9] * m[15] + m[0]  * m[11] * m[13] + m[8]  * m[1] * m[15] -
 				  m[8]  * m[3] * m[13] - m[12] * m[1] * m[11] + m[12] * m[3] * m[9];
 
-		inv[13] = m[0]  * m[9] * m[14] - m[0]  * m[10] * m[13] - m[8]  * m[1] * m[14] + 
+		inv[13] = m[0]  * m[9] * m[14] - m[0]  * m[10] * m[13] - m[8]  * m[1] * m[14] +
 				  m[8]  * m[2] * m[13] + m[12] * m[1] * m[10] - m[12] * m[2] * m[9];
 
-		inv[2] = m[1]  * m[6] * m[15] - m[1]  * m[7] * m[14] - m[5]  * m[2] * m[15] + 
+		inv[2] = m[1]  * m[6] * m[15] - m[1]  * m[7] * m[14] - m[5]  * m[2] * m[15] +
 				 m[5]  * m[3] * m[14] + m[13] * m[2] * m[7] - m[13] * m[3] * m[6];
 
-		inv[6] = -m[0]  * m[6] * m[15] + m[0]  * m[7] * m[14] + m[4]  * m[2] * m[15] - 
+		inv[6] = -m[0]  * m[6] * m[15] + m[0]  * m[7] * m[14] + m[4]  * m[2] * m[15] -
 				  m[4]  * m[3] * m[14] - m[12] * m[2] * m[7] +  m[12] * m[3] * m[6];
 
-		inv[10] = m[0]  * m[5] * m[15] - m[0]  * m[7] * m[13] - m[4]  * m[1] * m[15] + 
+		inv[10] = m[0]  * m[5] * m[15] - m[0]  * m[7] * m[13] - m[4]  * m[1] * m[15] +
 				  m[4]  * m[3] * m[13] + m[12] * m[1] * m[7] - m[12] * m[3] * m[5];
 
-		inv[14] = -m[0]  * m[5] * m[14] + m[0]  * m[6] * m[13] + m[4]  * m[1] * m[14] - 
+		inv[14] = -m[0]  * m[5] * m[14] + m[0]  * m[6] * m[13] + m[4]  * m[1] * m[14] -
 				   m[4]  * m[2] * m[13] - m[12] * m[1] * m[6] + m[12] * m[2] * m[5];
 
-		inv[3] = -m[1] * m[6] * m[11] + m[1] * m[7] * m[10] + m[5] * m[2] * m[11] - 
+		inv[3] = -m[1] * m[6] * m[11] + m[1] * m[7] * m[10] + m[5] * m[2] * m[11] -
 				  m[5] * m[3] * m[10] - m[9] * m[2] * m[7] + m[9] * m[3] * m[6];
 
-		inv[7] = m[0] * m[6] * m[11] - m[0] * m[7] * m[10] - m[4] * m[2] * m[11] + 
+		inv[7] = m[0] * m[6] * m[11] - m[0] * m[7] * m[10] - m[4] * m[2] * m[11] +
 				 m[4] * m[3] * m[10] + m[8] * m[2] * m[7] - m[8] * m[3] * m[6];
 
-		inv[11] = -m[0] * m[5] * m[11] + m[0] * m[7] * m[9] + m[4] * m[1] * m[11] - 
+		inv[11] = -m[0] * m[5] * m[11] + m[0] * m[7] * m[9] + m[4] * m[1] * m[11] -
 				   m[4] * m[3] * m[9] - m[8] * m[1] * m[7] + m[8] * m[3] * m[5];
 
-		inv[15] = m[0] * m[5] * m[10] - m[0] * m[6] * m[9] - m[4] * m[1] * m[10] + 
+		inv[15] = m[0] * m[5] * m[10] - m[0] * m[6] * m[9] - m[4] * m[1] * m[10] +
 				  m[4] * m[2] * m[9] + m[8] * m[1] * m[6] - m[8] * m[2] * m[5];
 
 		det = m[0] * inv[0] + m[1] * inv[4] + m[2] * inv[8] + m[3] * inv[12];
@@ -169,31 +260,31 @@ var utils={
 		for (i = 0; i < 16; i++){
 			out[i] = inv[i] * det;
 		}
-		
+
 		return out;
 	},
-	
+
 	transposeMatrix: function(m){
-		var out = []; 
-		
+		var out = [];
+
 		var row, column, row_offset;
-		
+
 		row_offset=0;
 		for (row = 0; row < 4; ++row) {
 			row_offset = row * 4;
 			for (column = 0; column < 4; ++column){
 				out[row_offset + column] = m[row + column * 4];
-			  }    
+			  }
 		}
-		return out;        
+		return out;
 	},
-	
+
 	multiplyMatrices: function(m1, m2){
 	// Perform matrix product  { out = m1 * m2;}
-		var out = [];  
-		
+		var out = [];
+
 		var row, column, row_offset;
-		
+
 		row_offset=0;
 		for (row = 0; row < 4; ++row) {
 			row_offset = row * 4;
@@ -203,18 +294,18 @@ var utils={
 					(m1[row_offset + 1] * m2[column + 4]) +
 					(m1[row_offset + 2] * m2[column + 8]) +
 					(m1[row_offset + 3] * m2[column + 12]);
-			  }    
+			  }
 		}
-		return out; 
-	},	
+		return out;
+	},
 
 	multiplyMatrixVector: function(m, v){
        /* Mutiplies a matrix [m] by a vector [v] */
-       
-		var out = [];  
-		
+
+		var out = [];
+
 		var row, row_offset;
-		
+
 		row_offset=0;
 		for (row = 0; row < 4; ++row) {
 			row_offset = row * 4;
@@ -224,18 +315,18 @@ var utils={
 				(m[row_offset + 1] * v[1]) +
 				(m[row_offset + 2] * v[2]) +
 				(m[row_offset + 3] * v[3]);
-				 
+
 		}
-		return out;        
+		return out;
 	},
-	
-	
-	
-	
-	
-	
-	
-	
+
+
+
+
+
+
+
+
 //*** MODEL MATRIX OPERATIONS
 
 
@@ -247,10 +338,10 @@ var utils={
 		out[3]  = dx;
 		out[7]  = dy;
 		out[11] = dz;
-		return out; 
+		return out;
 	},
 
-	
+
 	MakeRotateXMatrix: function(a) {
 	// Create a transform matrix for a rotation of {a} along the X axis.
 
@@ -264,7 +355,7 @@ var utils={
 		out[6] = -s;
 		out[9] = s;
 
-		return out; 
+		return out;
 	},
 
 	MakeRotateYMatrix: function(a) {
@@ -273,7 +364,7 @@ var utils={
 		var out = this.identityMatrix();
 
 		var adeg = this.degToRad(a);
-		
+
 		var c = Math.cos(adeg);
 		var s = Math.sin(adeg);
 
@@ -281,10 +372,10 @@ var utils={
 		out[2] = -s;
 		out[8] = s;
 
-		return out; 
+		return out;
 	},
 
-	MakeRotateZMatrix: function(a) {                                            
+	MakeRotateZMatrix: function(a) {
 	// Create a transform matrix for a rotation of {a} along the Z axis.
 
 		var out = this.identityMatrix();
@@ -297,17 +388,17 @@ var utils={
 		out[4] = -s;
 		out[1] = s;
 
-		return out; 
+		return out;
 	},
 
 	MakeScaleMatrix: function(s) {
 	// Create a transform matrix for proportional scale
 
-		var out = this.identityMatrix();                                               
+		var out = this.identityMatrix();
 
 		out[0] = out[5] = out[10] = s;
 
-		return out; 
+		return out;
 	},
 
 
@@ -315,15 +406,15 @@ var utils={
 	MakeWorld: function(tx, ty, tz, rx, ry, rz, s){
 	//Creates a world matrix for an object.
 
-		var Rx = this.MakeRotateXMatrix(ry);                
+		var Rx = this.MakeRotateXMatrix(ry);
 		var Ry = this.MakeRotateYMatrix(rx);
-		var Rz = this.MakeRotateZMatrix(rz);  
+		var Rz = this.MakeRotateZMatrix(rz);
 		var S  = this.MakeScaleMatrix(s);
-		var T =  this.MakeTranslateMatrix(tx, ty, tz);         
-		   
+		var T =  this.MakeTranslateMatrix(tx, ty, tz);
+
 		out = this.multiplyMatrices(Rz, S);
 		out = this.multiplyMatrices(Ry, out);
-		out = this.multiplyMatrices(Rx, out);  
+		out = this.multiplyMatrices(Rx, out);
 		out = this.multiplyMatrices(T, out);
 
 		return out;
@@ -332,7 +423,7 @@ var utils={
 	MakeView: function(cx, cy, cz, elev, ang) {
 	// Creates in {out} a view matrix. The camera is centerd in ({cx}, {cy}, {cz}).
 	// It looks {ang} degrees on y axis, and {elev} degrees on the x axis.
-		
+
 		var T = [];
 		var Rx = [];
 		var Ry = [];
@@ -364,7 +455,7 @@ var utils={
 		perspective[10] = (f + n) / (n - f);
 		perspective[11] = 2.0 * f * n / (n - f);
 		perspective[14] = -1.0;
-		perspective[15] = 0.0;	
+		perspective[15] = 0.0;
 
 		return perspective;
 	}
