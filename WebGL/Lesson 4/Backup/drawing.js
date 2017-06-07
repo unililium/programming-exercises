@@ -56,9 +56,9 @@ worldMatrix[0] = utils.MakeWorld(-3.0, 0.0, -1.5, 0.0, 0.0, 0.0, 0.5);
 worldMatrix[1] = utils.MakeWorld(3.0, 0.0, -1.5, 0.0, 0.0, 0.0, 0.5);
 worldMatrix[2] = utils.MakeWorld(0.0, 0.0, -3.0, 0.0, 0.0, 0.0, 0.5);
 
-var observerPosition = Float32Array(4);
+var observerPosition = new Float32Array(4);
 
-function main(){
+function main() {
 
 	canvas=document.getElementById("my-canvas");
 	try{
@@ -227,6 +227,7 @@ function main(){
 
 		gl.uniform4fv(materialDiffColorHandle, new Float32Array(cubeMaterialColor));
 		gl.uniform4fv(materialSpecColorHandle, new Float32Array(cubeSpecularColor));
+		gl.uniform1f(materialSpecPowerHandle, 50.0);
 		gl.uniform3fv(lightDirectionHandle, new Float32Array(directionalLight));
 		gl.uniform4fv(lightColorHandle, new Float32Array(directionalLightColor));
 		gl.uniform3fv(eyePositionHandle, observerPosition);
