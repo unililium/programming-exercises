@@ -14,8 +14,9 @@ var normalMatrix;
 var VBO, IBO;
 
 var vertexPositionHandle, vertexNormalHandle, matrixPositionHandle,
-	materialDiffColorHandle, lightDirectionHandle, lightColorHandle,
-	normalMatrixHandle;
+	normalMatrixHandle, vertexMatrixHandle,
+	materialDiffColorHandle, materialSpecColorHandle, materialSpecPowerHandle, lightDirectionHandle, lightColorHandle,
+	eyePositionHandle;
 
 //Light parameters
 var	dirLightAlpha = -utils.degToRad(60);
@@ -28,6 +29,7 @@ var directionalLight = [Math.cos(dirLightAlpha) * Math.cos(dirLightBeta),
 var directionalLightColor = [1.0, 1.0, 1.0, 1.0];
 
 var cubeMaterialColor = [1.0, 0.5, 0.5, 1.0];
+var cubeSpecularColor = [1.0, 0.3, 0.3, 1.0];
 
 //Create camera parameters
 var cx = 5.0;
@@ -53,6 +55,8 @@ var lastUpdateTime = (new Date).getTime();
 worldMatrix[0] = utils.MakeWorld(-3.0, 0.0, -1.5, 0.0, 0.0, 0.0, 0.5);
 worldMatrix[1] = utils.MakeWorld(3.0, 0.0, -1.5, 0.0, 0.0, 0.0, 0.5);
 worldMatrix[2] = utils.MakeWorld(0.0, 0.0, -3.0, 0.0, 0.0, 0.0, 0.5);
+
+var observerPosition = Float32Array(4);
 
 function main(){
 
@@ -113,10 +117,16 @@ function main(){
 		matrixPositionHandle = gl.getUniformLocation(shaderProgram, 'wvpMatrix');
 
 		normalMatrixHandle = gl.getUniformLocation(shaderProgram, 'nMatrix');
+		vertexMatrixHandle = gl.getUniformLocation(shaderProgram, 'pMatrix');
+
+		materialSpecColorHandle = gl.getUniformLocation(shaderProgram, 'mSpecColor');
+		materialSpecPowerHandle = gl.getUniformLocation(shaderProgram, 'mSpecPower');
 
 		materialDiffColorHandle = gl.getUniformLocation(shaderProgram, 'mDiffColor');
 		lightDirectionHandle = gl.getUniformLocation(shaderProgram, 'lightDirection');
 		lightColorHandle = gl.getUniformLocation(shaderProgram, 'lightColor');
+
+		eyePositionHandle = gl.getUniformLocation(shaderProgram, 'eyePosition');
 
 
 		utils.initInteraction();
@@ -126,11 +136,9 @@ function main(){
 		drawScene();
 
 
-	}else{
+	} else {
 		alert( "Error: Your browser does not appear to support WebGL.");
 	}
-
-
 
 	function initInteraction(){
 		var keyFunction = function(e) {
@@ -205,6 +213,10 @@ function main(){
 			projectionMatrix[i] = utils.multiplyMatrices(viewMatrix, worldMatrix[i]);
 			projectionMatrix[i] = utils.multiplyMatrices(perspectiveMatrix, projectionMatrix[i]);
 		}
+
+		observerPosition[0] = cx;
+		observerPosition[1] = cy;
+		observerPosition[2] = cz;
 	}
 
 	function drawScene(){
@@ -212,6 +224,12 @@ function main(){
 		animate();
 
 		computeMatrix();
+
+		gl.uniform4fv(materialDiffColorHandle, new Float32Array(cubeMaterialColor));
+		gl.uniform4fv(materialSpecColorHandle, new Float32Array(cubeSpecularColor));
+		gl.uniform3fv(lightDirectionHandle, new Float32Array(directionalLight));
+		gl.uniform4fv(lightColorHandle, new Float32Array(directionalLightColor));
+		gl.uniform3fv(eyePositionHandle, observerPosition);
 
 		for(i = 0; i < 4; i++) {
 			gl.uniformMatrix4fv(matrixPositionHandle, gl.FALSE, utils.transposeMatrix(projectionMatrix[i]));
@@ -221,6 +239,8 @@ function main(){
 			} else {
 				gl.uniformMatrix4fv(normalMatrixHandle, gl.FALSE, utils.transposeMatrix(normalMatrix));
 			}
+
+			gl.uniformMatrix4fv(vertexMatrixHandle, gl.FALSE, utils.transposeMatrix(worldMatrix[i]));
 
 			gl.bindBuffer(gl.ARRAY_BUFFER, VBO);
 			gl.enableVertexAttribArray(vertexPositionHandle);
@@ -232,9 +252,7 @@ function main(){
 			gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, IBO);
 			gl.drawElements(gl.TRIANGLES, indices.length, gl.UNSIGNED_SHORT, 0);
 		}
-		gl.uniform4fv(materialDiffColorHandle, new Float32Array(cubeMaterialColor));
-		gl.uniform3fv(lightDirectionHandle, new Float32Array(directionalLight));
-		gl.uniform4fv(lightColorHandle, new Float32Array(directionalLightColor));
+
 
 		window.requestAnimationFrame(drawScene);
 
