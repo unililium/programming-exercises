@@ -9,15 +9,14 @@ var	perspectiveMatrix,		//perspective - frustum
 	viewMatrix;				//camera matrix
 var	worldMatrix = new Array();			//position / rotation / scale of the cube
 // var viewWorldMatrix = new Array();
-
-var normalMatrix;
+// var normalMatrix;
 
 var VBO, IBO;
 
 var vertexPositionHandle, vertexNormalHandle, matrixPositionHandle,
-	normalMatrixHandle, vertexMatrixHandle,
+	// normalMatrixHandle, vertexMatrixHandle,
 	materialDiffColorHandle, materialSpecColorHandle, materialSpecPowerHandle, lightDirectionHandle, lightColorHandle;
-	// eyePositionHandle;
+	eyePositionHandle;
 
 //Light parameters
 var	dirLightAlpha = -utils.degToRad(60);
@@ -27,7 +26,7 @@ var directionalLight = [Math.cos(dirLightAlpha) * Math.cos(dirLightBeta),
 						Math.sin(dirLightAlpha),
 						Math.cos(dirLightAlpha) * Math.sin(dirLightBeta)];
 
-var directionalLightModified = new Float32Array(3);
+// var directionalLightModified = new Float32Array(3);
 
 var directionalLightColor = [1.0, 1.0, 1.0, 1.0];
 
@@ -60,7 +59,8 @@ worldMatrix[0] = utils.MakeWorld(-3.0, 0.0, -1.5, 0.0, 0.0, 0.0, 0.5);
 worldMatrix[1] = utils.MakeWorld(3.0, 0.0, -1.5, 0.0, 0.0, 0.0, 0.5);
 worldMatrix[2] = utils.MakeWorld(0.0, 0.0, -3.0, 0.0, 0.0, 0.0, 0.5);
 
-// var observerPosition = new Float32Array(4);
+var observerPositionObj = new Array(4);
+var directionalLightObj = new Array(4);
 
 function main() {
 
@@ -120,8 +120,8 @@ function main() {
 		vertexNormalHandle = gl.getAttribLocation(shaderProgram, 'inNormal');
 		matrixPositionHandle = gl.getUniformLocation(shaderProgram, 'wvpMatrix');
 
-		normalMatrixHandle = gl.getUniformLocation(shaderProgram, 'nMatrix');
-		vertexMatrixHandle = gl.getUniformLocation(shaderProgram, 'pMatrix');
+		// normalMatrixHandle = gl.getUniformLocation(shaderProgram, 'nMatrix');
+		// vertexMatrixHandle = gl.getUniformLocation(shaderProgram, 'pMatrix');
 
 		materialSpecColorHandle = gl.getUniformLocation(shaderProgram, 'mSpecColor');
 		materialSpecPowerHandle = gl.getUniformLocation(shaderProgram, 'mSpecPower');
@@ -213,16 +213,21 @@ function main() {
 	function computeMatrix(){
 		viewMatrix = utils.MakeView(cx, cy, cz, elevation, angle);
 
-		var viewMatrix3 = utils.sub3x3from4x4(viewMatrix);
+		// var viewMatrix3 = utils.sub3x3from4x4(viewMatrix);
 
-		directionalLightModified = utils.multiplyMatrix3Vector3(viewMatrix3, directionalLight);
+		// directionalLightModified = utils.multiplyMatrix3Vector3(viewMatrix3, directionalLight);
 
-		normalMatrix = utils.multiplyMatrices(viewMatrix, worldMatrix[3]);
+		// normalMatrix = utils.multiplyMatrices(viewMatrix, worldMatrix[3]);
+
+		var eyeTemp = [cx, cy, cz, 1.0];
 
 		for(i = 0; i < 4; i++) {
 			projectionMatrix[i] = utils.multiplyMatrices(viewMatrix, worldMatrix[i]);
 			projectionMatrix[i] = utils.multiplyMatrices(perspectiveMatrix, projectionMatrix[i]);
-			viewWorldMatrix[i] = utils.multiplyMatrices(viewMatrix, worldMatrix[i]);
+			// viewWorldMatrix[i] = utils.multiplyMatrices(viewMatrix, worldMatrix[i]);
+
+			observerPositionObj = utils.multiplyMatrixVector(utils.invertMatrix(worldMatrix[i]), eyeTemp);
+			directionalLightObj = utils.multiplyMatrix3Vector3(utils.transposeMatrix3(utils.sub3x3from4x4(worldMatrix[i])), directionalLight);
 		}
 
 		/* observerPosition[0] = cx;
