@@ -8,7 +8,7 @@ var projectionMatrix = new Array();		//stack max
 var	perspectiveMatrix,		//perspective - frustum
 	viewMatrix;				//camera matrix
 var	worldMatrix = new Array();			//position / rotation / scale of the cube
-var viewWorldMatrix = new Array();
+// var viewWorldMatrix = new Array();
 
 var normalMatrix;
 

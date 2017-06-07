@@ -7,14 +7,13 @@ uniform float mSpecPower;
 uniform vec3 lightDirection; //directional light direction
 uniform vec4 lightColor;
 
-// varying vec3 eyePosition;
+varying vec3 eyePosition;
 varying vec3 fsNormal;
 varying vec3 fsPosition;
 
 void main() {
 
-	// vec3 nEyeDirection = normalize(eyePosition - fsPosition);
-	vec3 nEyeDirection = normalize(fsPosition);
+	vec3 nEyeDirection = normalize(eyePosition - fsPosition);
 	vec3 nLightDirection = -normalize(lightDirection);
 	vec3 nNormal = normalize(fsNormal);
 
