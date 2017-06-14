@@ -44,7 +44,7 @@ vec4 lightModel(int lt, vec3 pos) {
 		}
 	}
 
-	return ;
+	return vec4(nLightDir, lDim);
 }
 
 void main() {
