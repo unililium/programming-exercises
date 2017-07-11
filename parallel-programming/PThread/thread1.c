@@ -19,12 +19,12 @@ int main(void) {
     
     pthread_t mythread;
     
-    if (pthrad_create(&mythread, NULL, thread_function, NULL)) {
+    if (pthread_create(&mythread, NULL, thread_function, NULL)) {
         printf("error creating thread.");
         abort();
     }
 
-    if(pthread_jion (mythread, NULL)) {
+    if(pthread_join (mythread, NULL)) {
         printf("error joining thread.");
         abort();
     }
