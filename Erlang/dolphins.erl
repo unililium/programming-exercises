@@ -7,3 +7,13 @@ dolphin1() ->
         fish -> io:format("So long and thanks for all the fish!~n");
         _ -> io:format("Heh, we're smarter than you humans.~n")
     end.
+
+dolphin2() ->
+    receive
+        {From, do_a_flip} ->
+            From ! "How about no?";
+        {From, fish} ->
+            From ! "So long and thanks for all the fish!";
+        _ ->
+            io:format("Heh, we're smarter than you humans.~n")
+    end.
