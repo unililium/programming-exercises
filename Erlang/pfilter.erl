@@ -1,8 +1,11 @@
+-module(pfilter).
+-export([pfilter/2]).
+
 runit(Proc, F, X) ->
     Proc ! {self(), X, F(X)}.
 
 pfilter(F, L) ->
-    W = lists:map(func(x) -> spawn(?MODULE, runit, [self(), F, X])
+    W = lists:map(fun (X) -> spawn(?MODULE, runit, [self(), F, X])
                              end, L),
     lists:foldl(fun (P, Vo) ->
                         receive
