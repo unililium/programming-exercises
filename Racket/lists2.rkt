@@ -12,11 +12,11 @@
           (cons n (range (+ n 1) m)))
       '()))
 
-(define-syntax-rule (anddd EXPR1 EXPR2 EXPR3 BODY)
-  (if EXPR1
-      (if EXPR2
-          (if EXPR3
-              BODY
+(define-syntax-rule (and cond1 cond2 cond3 body)
+  (if cond1
+      (if cond2
+          (if cond3
+              body
               #f)
           #f)
       #f))
