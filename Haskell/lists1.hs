@@ -26,3 +26,9 @@ myMin' m [] = m
 myMin' m (x:xs)
     | m < x = myMin' m xs
     | otherwise = myMin' x xs
+
+range :: Int -> Int -> [Int]
+range n m
+    | n == m = [n]
+    | n < m = n : range (n + 1) m
+    | otherwise = m : range n (m + 1)

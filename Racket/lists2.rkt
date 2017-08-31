@@ -20,3 +20,6 @@
               #f)
           #f)
       #f))
+
+(define-syntax-rule (add1 expr)
+  (+ 1 expr))
