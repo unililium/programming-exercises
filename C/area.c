@@ -10,3 +10,4 @@ int main()
     printf( "\n\nArea = %d\n", area );
     return 0;
 }
+
