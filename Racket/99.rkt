@@ -25,3 +25,9 @@
         (lh (cdr l) (add1 n))))
   (lh l 0))
 (my-length '(a b c d))
+
+(define (my-reverse l)
+  (if (null? (cdr l))
+      l
+      (append (my-reverse (cdr l)) (list (car l)))))
+(my-reverse '(a b c d))
