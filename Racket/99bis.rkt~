@@ -1,0 +1,21 @@
+#lang racket
+
+(define (my-last L)
+  (if (eq? '() L)
+      '()
+      (if (eq? '() (cdr L))
+          (cons (car L) '())
+          (my-last (cdr L)))))
+
+(define (element-at L n)
+  (if (= 1 n)
+      (car L)
+      (element-at (cdr L) (- n 1))))
+
+(define (list-length L)
+  (if (eq? '() L)
+      0
+      (+ 1 (list-length (cdr L)))))
+
+(define (my-reverse L)
+  (foldl cons '() L))
