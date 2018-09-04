@@ -54,5 +54,10 @@
           (compress (cdr l)))
         (else
          (cons (car l) (compress (cdr l))))))
+
+(define-syntax-rule (swap x y)
+  (let ([tmp x])
+    (set! x y)
+    (set! y tmp)))
           
       
