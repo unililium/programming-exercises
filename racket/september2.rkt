@@ -59,5 +59,11 @@
   (let ([tmp x])
     (set! x y)
     (set! y tmp)))
+
+(define (deepen l)
+  (foldl (lambda (x y)
+           (list y x))
+         (list (car l))
+         (cdr l)))
           
       
