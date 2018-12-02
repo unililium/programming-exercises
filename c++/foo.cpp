@@ -6,28 +6,13 @@
 
 // FUNCTION PROTOTYPES 
 
-double AddNumbers(double num1, double num2);
-
 int main() {
-    std::vector<int> myVec(10);
-    std::iota(std::begin(myVec), std::end(myVec), 1);
+    int age = 42;
+    int* pAge = NULL;
 
-    for(auto y: myVec) {
-        if(y != 0 && (y % 2) == 0)
-            std::cout << y << "\n";
-    }
+    pAge = &age;
 
-    double num1, num2;
-    std::cout << "Enter num 1: ";
-    std::cin >> num1;
-    std::cout << "Enter num 2: ";
-    std::cin >> num2;
-    printf("%.1f + %.1f = %.1f\n", num1, num2, AddNumbers(num1, num2));
+    std::cout << "Address: " << pAge << "\n";
 
     return 0;
-}
-
-// FUNCTIONS
-double AddNumbers(double num1, double num2) {
-    return num1 + num2;
 }
