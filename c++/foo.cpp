@@ -12,7 +12,7 @@ int main() {
 
     pAge = &age;
 
-    std::cout << "Address: " << pAge << "\n";
+    std::cout << "Address: " << *pAge << "\n";
 
     return 0;
 }
