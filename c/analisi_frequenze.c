@@ -25,6 +25,7 @@ void main() {
 
     puts("Inserisci il pathname completo del file da analizzare: ");
     fgets(pathname, 100, stdin);
+    printf("Hai inserito: %s", pathname);
 
     fp = fopen(pathname, "r");
     if (fp == NULL) {
