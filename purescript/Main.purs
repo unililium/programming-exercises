@@ -1,3 +1,10 @@
+module Main where
+
+import Prelude
+
+greet :: String -> String
+greet name = "Hello, " <> name <> "!"
+
 sourceList :: [Int]
 sourceList = [1..100]
 
